@@ -24,24 +24,8 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
   http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 }
 
-// func pathHanlder(w http.ResponseWriter, r *http.Request) {
-// 	switch(r.URL.Path) {
-// 	case "/":
-// 		homeHandler(w, r)
-// 	case "/contact":
-// 		contactHandler(w, r)
-// 	default: 
-//     notFoundHandler(w, r)
-// 	}
-// }
-
-
-//We can use instance of Router in http.ListenAndServe as 2nd argument, since it implements the http.Handler interface 
-// by implementing ServerHttp method
-type Router struct {}
-
-func (router Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-  switch(r.URL.Path) {
+func pathHanlder(w http.ResponseWriter, r *http.Request) {
+	switch(r.URL.Path) {
 	case "/":
 		homeHandler(w, r)
 	case "/contact":
@@ -51,17 +35,12 @@ func (router Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func main() {
 
+func main() {
   //HandleFunc are used only when DefaultServeMux is used, which in turn is used when nil is passed as second argument
   // in  ==> http.ListenAndServe
+	http.HandleFunc("/", pathHanlder)
 
-	// http.HandleFunc("/", pathHanlder)
-	// http.HandleFunc("/", homeHandler)
-	// http.HandleFunc("/contact", contactHandler)
-
-  var router Router
 	fmt.Println("Starting Web Server on 3000...");
-	// http.ListenAndServe(":3000", nil)
-	http.ListenAndServe(":3000", router)
+	http.ListenAndServe(":3000", nil)
 }
