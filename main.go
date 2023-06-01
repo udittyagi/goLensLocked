@@ -38,6 +38,8 @@ func main() {
     with underlying type of  func(ResponseWriter, *Request), which our pathHandler matches and http.HandlerFunc also implements ServerHTTP method
     so http.HandlerFunc implements http.Handler interface as well hence by type conveting our pathHandler, it will be a good candidate
     to be passed in ListenAndServe
+
+    Inside http.HandleFunc('/', pathHandler), this conversion of pathHandler also occurs to use it with mux.Handle
   */
   var router http.HandlerFunc = pathHandler
 	fmt.Println("Starting Web Server on 3000...");
