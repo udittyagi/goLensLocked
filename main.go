@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
+	"path/filepath"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -10,7 +13,32 @@ import (
 
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "<h1>Hello There Awesome Go Program</h1>")
+
+  // Same as node.js path module
+	 filePath := filepath.Join("templates", "home.gohtml")
+   tpl, err := template.ParseFiles(filePath);
+
+   //This error occurs when our template fails to parse
+   //This can happen for a variety of reasons, but they all relate to a template that isn’t valid no matter what data we provide to it
+   if err != nil {
+    log.Printf("Error Occured While parsing template: %v", err)
+    http.Error(w, "Error Occured while parsing template", http.StatusInternalServerError);
+    return;
+   }
+
+   erEx := tpl.Execute(w, nil);
+
+   //occur when we attempt to execute our template
+   // This type of error can occur if our template parses correctly, but execution fails for some reason
+   // eg: if the data we pass in is missing a field our template needs
+   if erEx != nil {
+    log.Printf("Error Occured While executing template: %v", err);
+
+    //Event though we are sending error here, there might be the case
+    //where tpl.Execute(w, nil); have written some data on request stream previously
+    // so we may see that data too on client
+    http.Error(w, "Error Occured while executing template", http.StatusInternalServerError);
+   }
 }
 
 func contactHandler(w http.ResponseWriter, r *http.Request) {
