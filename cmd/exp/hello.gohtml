@@ -1,11 +1,58 @@
 <p>Hello {{.Name}}</p>
 {{.Bio}}
 
+
+{{/* 
+    --------------------- Accessing Map -----------------
+    index function
+    Returns the result of indexing its first argument by the
+    following arguments. Thus "index x 1 2 3" is, in Go syntax,
+    x[1][2][3]. Each indexed item must be a map, slice, or array.
+ */}}
+{{(index .AddressMap "city1").City}}
+<p>Address: {{(index .AddressMap "city1").City}} - {{(index .AddressMap "city1").Pin}}</p>
+
+{{/* 
+    --------------------- Range ------------------------
+    Current value of element is in . (dot)
+ */}}
+{{range .Arr}}
+    <div>{{.}}</div>
+{{end}}
+
+{{range .ArrAddress}}
+    <div>
+        <div>{{.City}}</div>
+        <div>{{.Pin}}</div>
+    </div>
+{{end}}
+
+{{/* 
+    -----------------------If Else -----------------------
+    and and or are function for and operator and or operator
+    if test for false, nil value
+    similarly we have gt, lt, eq and other functions
+
+ */}}
+
+ {{if .IsLoading}}
+    <div>Loading Screen</div>
+ {{end}}
+
+ {{if and (not .IsLoading) .IsActive}}
+    <div>Not Loading and Active</div>
+{{else}}
+    <div>Loading</div>
+ {{end}}
+
+
+
 <script>
     cont data = {
         "name": {{.Name}},
         "bio": {{.Bio}},
         "age": {{.Age}}
+        address: {{.AddressMap}}
     }
 
     console.log(data)
